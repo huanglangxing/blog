@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>标签</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../static/css/me.css">
+</head>
+<body>
+
+  <!--导航-->
+  <nav th:replace="_fragments :: menu(3)"></nav>
+
+  <!--中间内容-->
+  <div  class="m-container-small m-padded-tb-big animated fadeIn">
+    <div class="ui container">
+      <!--header-->
+      <div class="ui top attached segment">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <h3 class="ui teal header">标签</h3>
+          </div>
+          <div class="right aligned column">
+            共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${#arrays.length(tags)}"> 5 </h2> 个
+          </div>
+        </div>
+      </div>
+
+      <div class="ui attached segment m-padded-tb-large">
+        <a href="#" th:href="@{/tags/{id}(id=${tag.id})}"  class="ui basic left pointing large label m-margin-tb-tiny" th:classappend="${tag.id==activeTagId} ? 'teal'" th:each="tag : ${tags}">
+          <span th:text="${tag.name}">标签名称</span> <div class="detail" th:text="${#arrays.length(tag.blogs)}">4</div>
+        </a>
+      </div>
+
+      <div class="ui top attached teal segment">
+        <div class="ui padded vertical segment m-padded-tb-large" th:each="blog : ${page.content}">
+          <div class="ui middle aligned mobile reversed stackable grid" >
+            <div class="eleven wide column">
+              <h3 class="ui header" ><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}">博客标题</a></h3>
+              <p class="m-text" th:text="|${blog.description}......|">博客描述</p>
+              <div class="ui grid">
+                <div class="row">
+                  <div class="eleven wide column">
+                    <div class="ui mini horizontal link list">
+                      <div class="item">
+                        <img src="https://picsum.photos/800/450?random=11" th:src="@{${blog.user.avatar}}"  alt="" class="ui avatar image">
+                        <div class="content"><a href="#" class="header" th:text="${blog.user.nickname}" >lazystar</a></div>
+                      </div>
+                      <div class="item">
+                        <i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">时间</span>
+                      </div>
+                      <div class="item">
+                        <i class="eye icon"></i> <span th:text="${blog.view}">博客访问数</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="right aligned five wide column">
+                    <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.name}">分类名称</a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="column">
+                    <a href="#" th:href="@{/tags/{id}(id=${tag.id})}" class="ui  basic left pointing label m-padded-mini m-text-thin" th:classappend="${tag.id==activeTagId} ? 'teal'" th:each="tag : ${blog.tags}" th:text="${tag.name}">标签名称</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="five wide column">
+              <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                <img src="https://picsum.photos/800/450?random=11" th:src="@{${blog.firstPicture}}"  alt="" class="ui rounded image">
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!--footer-->
+      <div class="ui bottom attached segment" th:if="${page.totalPages}>1">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <a href="#" th:href="@{'/tags/'+${activeTagId}(page=${page.number}-1)}"  th:unless="${page.first}" class="ui mini teal basic button">上一页</a>
+          </div>
+          <div class="right aligned column">
+            <a href="#" th:href="@{'/tags/'+${activeTagId}(page=${page.number}+1)}"  th:unless="${page.last}" class="ui mini teal basic button">下一页</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <!--底部 segment片段 vertical垂直-->
+  <footer class="ui inverted vertical segment m-padded-tb-massive m-opacity-mini">
+    <!--所有格子的内容居中-->
+    <div class="ui center aligned container">
+      <!--格子 grid是分为十六份 bootstrap是分为十二份-->
+      <!--divided分割线-->
+      <div class="ui inverted divided stackable grid">
+        <!--配置占用多少格子-->
+        <div class="three wide column">
+          <!--套一个保持格式-->
+          <div class="ui inverted link list">
+            <div class="item">
+              <img src="../static/images/wechat.jpg" th:src="@{/images/wechat.jpg}" alt="" class="ui rounded image" style="width: 110px">
+            </div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced">我的博客已运营</h4>
+          <p id="run_time" class="item m-text-thin"></p>
+        </div>
+        <div class="four wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced">联系我</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item">QQ:1135498328</a>
+            <a href="#" class="item">Email:1135498328@qq.com</a>
+          </div>
+        </div>
+        <div class="four wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced">Blog</h4>
+          <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、用于存放近期的编程、学习、生活等内容，欢迎大家交流学习！</p>
+        </div>
+      </div>
+      <!--分割线-->
+      <div class="ui inverted section divider"></div>
+      <p class="m-text-thin m-text-spaced m-opacity-tiny">粤ICP备2020139967号-1</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+  <script>
+    // 通过jquery在移动端显示和隐藏导航栏
+    $(".menu.toggle").click(function (){
+      $(".m-item").toggleClass("m-mobile-hide");
+    });
+
+    $('.ui.dropdown')
+            .dropdown();
+
+    //关闭消息
+    $('.message .close')
+            .on('click', function () {
+              $(this)
+                      .closest('.message')
+                      .transition('fade');
+            });
+
+    // 运行时间统计
+    function secondToDate(second) {
+      if (!second) {
+        return 0;
+      }
+      var time = new Array(0, 0, 0, 0, 0);
+      if (second >= 365 * 24 * 3600) {
+        time[0] = parseInt(second / (365 * 24 * 3600));
+        second %= 365 * 24 * 3600;
+      }
+      if (second >= 24 * 3600) {
+        time[1] = parseInt(second / (24 * 3600));
+        second %= 24 * 3600;
+      }
+      if (second >= 3600) {
+        time[2] = parseInt(second / 3600);
+        second %= 3600;
+      }
+      if (second >= 60) {
+        time[3] = parseInt(second / 60);
+        second %= 60;
+      }
+      if (second > 0) {
+        time[4] = second;
+      }
+      return time;
+    }
+    function setTime() {
+      /*此处为网站的创建时间*/
+      var create_time = Math.round(new Date(Date.UTC(2021, 1, 6, 0, 0, 0)).getTime() / 1000);
+      var timestamp = Math.round((new Date().getTime()) / 1000);
+      currentTime = secondToDate((timestamp - create_time));
+      currentTimeHtml = currentTime[1] + '天' + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4] + '秒';
+      $("#run_time")[0].innerHTML = currentTimeHtml;
+    }
+    setInterval(setTime, 1000);
+
+  </script>
+</body>
+</html>
